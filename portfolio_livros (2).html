@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Leituras — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  background: #0e0e0e;
+  color: #e8e2da;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100dvh;
+}
+img, svg { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+
+:root {
+  --h-bg:      #0c0608;
+  --h-bg2:     #140009;
+  --h-red:     #bf1525;
+  --h-red2:    #e8253a;
+  --h-cream:   #f0e8df;
+  --h-muted:   rgba(240,232,223,0.55);
+  --h-border:  rgba(191,21,37,0.22);
+
+  --s-bg:      #f4f0eb;
+  --s-bg2:     #eae4db;
+  --s-navy:    #0f1e2d;
+  --s-blue:    #5ba3c2;
+  --s-gold:    #b8882a;
+  --s-gold2:   #d4a843;
+  --s-muted:   rgba(15,30,45,0.52);
+  --s-border:  rgba(184,136,42,0.28);
+
+  --radius-sm: 4px;
+  --radius:    10px;
+  --radius-lg: 18px;
+}
+
+/* SCREEN: CAPA */
+#capa {
+  position: fixed; inset: 0; z-index: 900;
+  background: #0c0c0c;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
+  transition: opacity .65s ease, visibility .65s;
+  overflow-y: auto;
+}
+#capa.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.capa-eyebrow {
+  font-family: 'Syne', sans-serif;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .45em; text-transform: uppercase;
+  color: #3a3a3a; margin-bottom: 3rem;
+}
+
+.capa-books { display: flex; flex-direction: column; gap: .8rem; width: 100%; max-width: 360px; }
+
+.capa-btn {
+  display: flex; align-items: stretch;
+  border-radius: var(--radius); overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
+  border: 1px solid; background: none;
+  text-align: left; width: 100%;
+}
+.capa-btn:active { transform: scale(.97); }
+.capa-btn-h { background: var(--h-bg2); border-color: var(--h-border); }
+.capa-btn-h:hover { box-shadow: 0 8px 30px rgba(191,21,37,.25); }
+.capa-btn-s { background: var(--s-bg); border-color: var(--s-border); }
+.capa-btn-s:hover { box-shadow: 0 8px 30px rgba(91,163,194,.2); }
+
+.capa-accent { width: 4px; flex-shrink: 0; }
+.capa-btn-h .capa-accent { background: var(--h-red); }
+.capa-btn-s .capa-accent { background: var(--s-gold); }
+
+.capa-body { padding: 1.3rem 1.3rem 1.3rem 1.2rem; flex: 1; }
+
+.capa-genre {
+  font-family: 'Syne', sans-serif; font-size: .55rem; font-weight: 700;
+  letter-spacing: .35em; text-transform: uppercase; margin-bottom: .5rem;
+}
+.capa-btn-h .capa-genre { color: var(--h-red); }
+.capa-btn-s .capa-genre { color: var(--s-gold); }
+
+.capa-title { font-family: 'DM Serif Display', serif; font-style: italic; line-height: 1.15; margin-bottom: .35rem; }
+.capa-btn-h .capa-title { font-size: 1.2rem; color: var(--h-cream); }
+.capa-btn-s .capa-title { font-size: 1.2rem; color: var(--s-navy); }
+
+.capa-author { font-family: 'Newsreader', serif; font-size: .78rem; font-style: italic; }
+.capa-btn-h .capa-author { color: var(--h-muted); }
+.capa-btn-s .capa-author { color: var(--s-muted); }
+
+.capa-arrow { display: flex; align-items: center; padding: 0 1.2rem 0 .5rem; font-size: 1rem; opacity: .3; }
+.capa-btn-h .capa-arrow { color: var(--h-red); }
+.capa-btn-s .capa-arrow { color: var(--s-gold); }
+
+/* NAV BAR */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+  height: 52px;
+  background: rgba(12,6,8,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.2rem;
+}
+.topbar-home {
+  font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700;
+  letter-spacing: .25em; color: #444; text-transform: uppercase;
+  transition: color .2s; padding: .5rem 0;
+}
+.topbar-home:hover { color: #888; }
+.topbar-tabs { display: flex; gap: .25rem; }
+.topbar-tab {
+  font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: .4rem .9rem; border-radius: 100px;
+  transition: background .2s, color .2s; color: #444;
+}
+.topbar-tab.harry { color: var(--h-red); }
+.topbar-tab.harry:hover, .topbar-tab.harry.active { background: rgba(191,21,37,.15); }
+.topbar-tab.sira { color: var(--s-gold); }
+.topbar-tab.sira:hover, .topbar-tab.sira.active { background: rgba(184,136,42,.12); }
+
+main { padding-top: 52px; }
+
+/* HARRY HERO */
+.h-section { background: var(--h-bg); color: var(--h-cream); }
+.h-hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 3rem 1.4rem 2.5rem;
+  position: relative; overflow: hidden;
+}
+.h-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 90%, rgba(191,21,37,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(100,0,15,.3) 0%, transparent 55%),
+    #0c0608;
+}
+.h-hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='.045'/%3E%3C/svg%3E");
+  background-size: 200px; pointer-events: none;
+}
+.h-hero-num {
+  position: absolute; right: -.1em; bottom: -.15em;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(10rem, 45vw, 22rem); line-height: 1;
+  color: var(--h-red); opacity: .045; pointer-events: none; user-select: none;
+}
+.h-hero-inner { position: relative; z-index: 2; }
+
+.h-eyebrow {
+  font-family: 'Syne', sans-serif; font-size: .6rem; font-weight: 700;
+  letter-spacing: .45em; text-transform: uppercase; color: var(--h-red);
+  margin-bottom: 1.4rem; display: flex; align-items: center; gap: .8rem;
+}
+.h-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--h-red); }
+
+.h-hero h1 {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(2.4rem, 10vw, 4.5rem); line-height: 1.05;
+  color: var(--h-cream); margin-bottom: .6rem;
+}
+.h-hero-author { font-family: 'Newsreader', serif; font-size: .88rem; font-style: italic; color: var(--h-muted); margin-bottom: 1.8rem; }
+.h-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+.h-tag {
+  font-family: 'Syne', sans-serif; font-size: .52rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: .35rem .75rem; border: 1px solid var(--h-border); color: rgba(191,21,37,.8); border-radius: 3px;
+}
+.h-hero-intro {
+  font-size: 1.05rem; font-style: italic; line-height: 1.75; color: var(--h-muted);
+  max-width: 480px; border-left: 2px solid var(--h-red); padding-left: 1rem;
+}
+
+.h-block { padding: 2.5rem 1.4rem; border-top: 1px solid var(--h-border); }
+.s-block { padding: 2.5rem 1.4rem; border-top: 1px solid var(--s-border); }
+
+.block-label {
+  font-family: 'Syne', sans-serif; font-size: .55rem; font-weight: 700;
+  letter-spacing: .45em; text-transform: uppercase; margin-bottom: .9rem;
+  display: flex; align-items: center; gap: .7rem;
+}
+.block-label::after { content: ''; flex: 1; height: 1px; }
+.h-label { color: var(--h-red); }
+.h-label::after { background: var(--h-border); }
+.s-label { color: var(--s-gold); }
+.s-label::after { background: var(--s-border); }
+
+.block-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.15; margin-bottom: 1.4rem; }
+.h-block .block-title { color: var(--h-cream); }
+.s-block .block-title { color: var(--s-navy); }
+
+.prose { font-size: 1rem; line-height: 1.82; font-weight: 300; }
+.h-prose { color: rgba(240,232,223,.72); }
+.s-prose { color: rgba(15,30,45,.7); }
+
+.ficha { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: 1.6rem; }
+.ficha-item { padding: .9rem 1rem; border-radius: var(--radius-sm); }
+.h-ficha-item { background: rgba(191,21,37,.06); border: 1px solid rgba(191,21,37,.13); }
+.s-ficha-item { background: rgba(184,136,42,.06); border: 1px solid rgba(184,136,42,.15); }
+.ficha-key {
+  font-family: 'Syne', sans-serif; font-size: .5rem; font-weight: 700;
+  letter-spacing: .35em; text-transform: uppercase; display: block; margin-bottom: .3rem;
+}
+.h-ficha-item .ficha-key { color: rgba(191,21,37,.7); }
+.s-ficha-item .ficha-key { color: var(--s-gold); }
+.ficha-val { font-size: .85rem; font-style: italic; line-height: 1.4; }
+.h-ficha-item .ficha-val { color: var(--h-cream); }
+.s-ficha-item .ficha-val { color: var(--s-navy); }
+
+.temas-grid { display: flex; flex-direction: column; gap: .7rem; margin-top: 1rem; }
+.tema-card {
+  padding: 1.2rem 1.1rem 1.2rem 1.3rem; border-radius: var(--radius-sm);
+  position: relative; overflow: hidden;
+}
+.tema-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+.h-tema { background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06); }
+.h-tema::before { background: var(--h-red); }
+.s-tema { background: rgba(15,30,45,.04); border: 1px solid rgba(15,30,45,.09); }
+.s-tema::before { background: var(--s-gold); }
+.tema-name { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 1rem; margin-bottom: .5rem; }
+.h-tema .tema-name { color: var(--h-cream); }
+.s-tema .tema-name { color: var(--s-navy); }
+.tema-text { font-size: .88rem; line-height: 1.7; }
+.h-tema .tema-text { color: rgba(240,232,223,.58); }
+.s-tema .tema-text { color: rgba(15,30,45,.62); }
+
+.narr-cards { display: flex; flex-direction: column; gap: .7rem; margin-top: 1rem; }
+.narr-card { padding: 1.3rem; border-radius: var(--radius); }
+.h-narr { background: rgba(191,21,37,.07); border: 1px solid rgba(191,21,37,.18); }
+.s-narr { background: rgba(91,163,194,.07); border: 1px solid rgba(91,163,194,.2); }
+.narr-icon { font-size: 1.3rem; margin-bottom: .7rem; display: block; }
+.narr-title {
+  font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700;
+  letter-spacing: .35em; text-transform: uppercase; margin-bottom: .7rem;
+}
+.h-narr .narr-title { color: var(--h-red); }
+.s-narr .narr-title { color: var(--s-blue); }
+.narr-text { font-size: .9rem; line-height: 1.78; }
+.h-narr .narr-text { color: rgba(240,232,223,.68); }
+.s-narr .narr-text { color: rgba(15,30,45,.7); }
+
+.pull-quote {
+  padding: 1.4rem 1.2rem; margin: 1.4rem 0;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: 1.05rem; line-height: 1.6; position: relative;
+}
+.pull-quote::before { content: '"'; position: absolute; top: -.3em; left: .3em; font-size: 4rem; line-height: 1; opacity: .12; }
+.h-pull { background: rgba(191,21,37,.07); border-left: 3px solid var(--h-red); color: rgba(240,232,223,.85); }
+.h-pull::before { color: var(--h-red); }
+.s-pull { background: rgba(184,136,42,.07); border-left: 3px solid var(--s-gold); color: rgba(15,30,45,.8); }
+.s-pull::before { color: var(--s-gold); }
+
+.timeline { margin-top: 1rem; }
+.tl-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid; }
+.tl-item:last-child { border-bottom: none; }
+.h-tl-item { border-color: rgba(191,21,37,.15); }
+.s-tl-item { border-color: rgba(184,136,42,.15); }
+.tl-dot { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; margin-top: .4rem; border: 2px solid; }
+.h-tl-dot { border-color: var(--h-red); background: var(--h-bg); }
+.s-tl-dot { border-color: var(--s-gold); background: var(--s-bg); }
+.tl-date { font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; margin-bottom: .35rem; }
+.h-tl-date { color: var(--h-red); }
+.s-tl-date { color: var(--s-gold); }
+.tl-text { font-size: .9rem; line-height: 1.65; }
+.h-tl-text { color: rgba(240,232,223,.62); }
+.s-tl-text { color: rgba(15,30,45,.65); }
+
+.lugares { display: flex; flex-direction: column; gap: .5rem; margin-top: 1rem; }
+.lugar { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.1rem; border-radius: var(--radius-sm); }
+.h-lugar { background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06); }
+.s-lugar { background: rgba(15,30,45,.04); border: 1px solid rgba(15,30,45,.08); }
+.lugar-pin { font-family: 'Syne', sans-serif; font-size: .55rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; flex-shrink: 0; margin-top: .15rem; }
+.h-lugar-pin { color: var(--h-red); }
+.s-lugar-pin { color: var(--s-gold); }
+.lugar-name { font-family: 'DM Serif Display', serif; font-style: italic; font-size: .95rem; }
+.h-lugar .lugar-name { color: var(--h-cream); }
+.s-lugar .lugar-name { color: var(--s-navy); }
+.lugar-desc { font-size: .8rem; line-height: 1.55; margin-top: .2rem; }
+.h-lugar .lugar-desc { color: rgba(240,232,223,.5); }
+.s-lugar .lugar-desc { color: rgba(15,30,45,.56); }
+
+.questoes { margin-top: 1rem; display: flex; flex-direction: column; gap: .6rem; }
+.questao {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1.1rem 1.1rem 1.1rem .9rem; border-radius: var(--radius-sm);
+  transition: transform .2s;
+}
+.questao:active { transform: translateX(4px); }
+.h-questao { border: 1px solid rgba(191,21,37,.18); background: rgba(191,21,37,.04); }
+.s-questao { border: 1px solid rgba(184,136,42,.18); background: rgba(184,136,42,.04); }
+.q-n { font-family: 'DM Serif Display', serif; font-size: 1.6rem; line-height: 1; opacity: .18; flex-shrink: 0; }
+.h-questao .q-n { color: var(--h-red); }
+.s-questao .q-n { color: var(--s-gold); }
+.q-txt { font-size: .95rem; font-style: italic; line-height: 1.6; margin-top: .15rem; }
+.h-questao .q-txt { color: rgba(240,232,223,.78); }
+.s-questao .q-txt { color: rgba(15,30,45,.78); }
+
+.reacoes { margin-top: 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.reacao { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.2rem; border-radius: var(--radius-sm); }
+.h-reacao { background: rgba(191,21,37,.07); border: 1px solid rgba(191,21,37,.15); }
+.s-reacao { background: rgba(91,163,194,.07); border: 1px solid rgba(91,163,194,.18); }
+.reacao-emoji { font-size: 1.4rem; flex-shrink: 0; }
+.reacao-label { font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; display: block; margin-bottom: .2rem; }
+.h-reacao .reacao-label { color: var(--h-red); }
+.s-reacao .reacao-label { color: var(--s-blue); }
+.reacao-desc { font-size: .85rem; font-style: italic; }
+.h-reacao .reacao-desc { color: rgba(240,232,223,.55); }
+.s-reacao .reacao-desc { color: rgba(15,30,45,.6); }
+
+.vocab { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.vocab-card { padding: .85rem .9rem; border-radius: var(--radius-sm); transition: transform .18s; }
+.vocab-card:active { transform: scale(.97); }
+.h-vocab { background: rgba(255,255,255,.025); border: 1px solid rgba(191,21,37,.12); }
+.s-vocab { background: rgba(15,30,45,.04); border: 1px solid rgba(15,30,45,.08); }
+.vocab-word { font-family: 'DM Serif Display', serif; font-style: italic; font-size: .95rem; display: block; margin-bottom: .25rem; }
+.h-vocab .vocab-word { color: var(--h-red); }
+.s-vocab .vocab-word { color: var(--s-gold); }
+.vocab-def { font-size: .73rem; line-height: 1.5; }
+.h-vocab .vocab-def { color: rgba(240,232,223,.48); }
+.s-vocab .vocab-def { color: rgba(15,30,45,.55); }
+
+.book-break {
+  height: 80px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(to right, var(--h-bg), #1a1a1a, var(--s-bg2)); position: relative;
+}
+.book-break-txt { font-family: 'Syne', sans-serif; font-size: .52rem; font-weight: 700; letter-spacing: .55em; text-transform: uppercase; color: rgba(255,255,255,.15); }
+
+.s-section { background: var(--s-bg); color: var(--s-navy); }
+.s-hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 3rem 1.4rem 2.5rem;
+  position: relative; overflow: hidden; background: var(--s-bg); color: var(--s-navy);
+}
+.s-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 50% at 80% 5%, rgba(91,163,194,.2) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 10% 85%, rgba(184,136,42,.12) 0%, transparent 50%),
+    var(--s-bg);
+}
+.s-hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(184,136,42,.035) 0, rgba(184,136,42,.035) 1px, transparent 0, transparent 50%),
+    repeating-linear-gradient(-45deg, rgba(91,163,194,.025) 0, rgba(91,163,194,.025) 1px, transparent 0, transparent 50%);
+  background-size: 18px 18px; pointer-events: none;
+}
+.s-hero-num {
+  position: absolute; right: -.05em; bottom: -.1em;
+  font-family: 'DM Serif Display', serif; font-size: clamp(10rem, 45vw, 22rem); line-height: 1;
+  color: var(--s-gold); opacity: .055; pointer-events: none; user-select: none;
+}
+.s-hero-inner { position: relative; z-index: 2; }
+.s-eyebrow {
+  font-family: 'Syne', sans-serif; font-size: .6rem; font-weight: 700;
+  letter-spacing: .45em; text-transform: uppercase; color: var(--s-gold);
+  margin-bottom: 1.4rem; display: flex; align-items: center; gap: .8rem;
+}
+.s-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--s-gold); }
+.s-hero h1 { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.4rem, 10vw, 4.5rem); line-height: 1.05; color: var(--s-navy); margin-bottom: .6rem; }
+.s-hero-author { font-family: 'Newsreader', serif; font-size: .88rem; font-style: italic; color: var(--s-muted); margin-bottom: 1.8rem; }
+.s-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+.s-tag { font-family: 'Syne', sans-serif; font-size: .52rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; padding: .35rem .75rem; border: 1px solid rgba(184,136,42,.3); color: var(--s-gold); border-radius: 3px; }
+.s-hero-intro { font-size: 1.05rem; font-style: italic; line-height: 1.75; color: var(--s-muted); max-width: 480px; border-left: 2px solid var(--s-gold); padding-left: 1rem; }
+
+footer { background: #050505; border-top: 1px solid rgba(255,255,255,.06); padding: 2.5rem 1.4rem; text-align: center; }
+.footer-label { font-family: 'Syne', sans-serif; font-size: .52rem; font-weight: 700; letter-spacing: .5em; text-transform: uppercase; color: #2a2a2a; margin-bottom: 1rem; }
+.footer-titles { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.5rem; }
+.footer-titles span { font-family: 'DM Serif Display', serif; font-style: italic; font-size: .9rem; }
+.footer-titles .ft-h { color: rgba(191,21,37,.5); }
+.footer-titles .ft-s { color: rgba(91,163,194,.45); }
+.footer-copy { font-family: 'Syne', sans-serif; font-size: .5rem; letter-spacing: .35em; color: #1e1e1e; text-transform: uppercase; }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .08s; }
+.reveal-d2 { transition-delay: .16s; }
+
+@media (min-width: 640px) {
+  .h-hero, .s-hero { padding: 5rem 3rem 3.5rem; justify-content: center; }
+  .ficha { grid-template-columns: repeat(3, 1fr); }
+  .vocab { grid-template-columns: repeat(3, 1fr); }
+  .temas-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .reacoes { flex-direction: row; }
+  .h-block, .s-block { padding: 3rem; max-width: 780px; margin: 0 auto; }
+}
+@media (min-width: 1024px) {
+  .h-block, .s-block { max-width: 860px; }
+  .vocab { grid-template-columns: repeat(4, 1fr); }
+  .ficha { grid-template-columns: repeat(5, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div id="capa">
+  <p class="capa-eyebrow">Portfolio de Leitura</p>
+  <div class="capa-books">
+    <button class="capa-btn capa-btn-h" onclick="enterSite('harry')">
+      <div class="capa-accent"></div>
+      <div class="capa-body">
+        <p class="capa-genre">Crime · Suspense · Literatura</p>
+        <p class="capa-title">A Verdade Sobre o Caso Harry Quebert</p>
+        <p class="capa-author">Joël Dicker, 2012</p>
+      </div>
+      <div class="capa-arrow">→</div>
+    </button>
+    <button class="capa-btn capa-btn-s" onclick="enterSite('sira')">
+      <div class="capa-accent"></div>
+      <div class="capa-body">
+        <p class="capa-genre">Romance Histórico · Espionagem</p>
+        <p class="capa-title">O Tempo Entre Costuras</p>
+        <p class="capa-author">María Dueñas, 2009</p>
+      </div>
+      <div class="capa-arrow">→</div>
+    </button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="topbar">
+  <button class="topbar-home" onclick="showCapa()">← Início</button>
+  <div class="topbar-tabs">
+    <a href="#harry" class="topbar-tab harry" onclick="closeCapa()">Quebert</a>
+    <a href="#sira"  class="topbar-tab sira"  onclick="closeCapa()">Costuras</a>
+  </div>
+</div>
+
+<main>
+
+<!-- HARRY -->
+<section id="harry" class="h-section">
+  <div class="h-hero">
+    <div class="h-hero-bg"></div>
+    <span class="h-hero-num" aria-hidden="true">I</span>
+    <div class="h-hero-inner">
+      <p class="h-eyebrow">Crime · Mistério</p>
+      <h1>A Verdade Sobre<br>o Caso Harry Quebert</h1>
+      <p class="h-hero-author">Joël Dicker — 2012</p>
+      <div class="h-tags">
+        <span class="h-tag">Grand Prix Académie Française</span>
+        <span class="h-tag">Prix Goncourt du Lycéen</span>
+        <span class="h-tag">+40 línguas</span>
+      </div>
+      <p class="h-hero-intro">Um jovem escritor bloqueado. Um mentor acusado de um crime antigo. E uma verdade que ninguém quer encontrar.</p>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Sinopse</p>
+    <h2 class="block-title">A História</h2>
+    <p class="prose h-prose">Marcus Goldman, escritor em crise criativa, procura ajuda no seu antigo mentor Harry Quebert. A vida de ambos muda quando Harry é acusado de um crime de décadas: o desaparecimento e morte de Nola Kellergan, cujo corpo é encontrado enterrado no seu jardim.</p>
+    <p class="prose h-prose" style="margin-top:.9rem">Determinado a provar a inocência do mentor, Marcus inicia uma investigação que desvenda segredos enterrados no passado e reviravoltas que ninguém esperava — questionando tudo o que julgávamos saber sobre as pessoas à nossa volta.</p>
+    <div class="ficha">
+      <div class="ficha-item h-ficha-item"><span class="ficha-key">Autor</span><span class="ficha-val">Joël Dicker</span></div>
+      <div class="ficha-item h-ficha-item"><span class="ficha-key">Ano</span><span class="ficha-val">2012</span></div>
+      <div class="ficha-item h-ficha-item"><span class="ficha-key">Género</span><span class="ficha-val">Thriller literário</span></div>
+      <div class="ficha-item h-ficha-item"><span class="ficha-key">Narrador</span><span class="ficha-val">Marcus Goldman · 1.ª pessoa</span></div>
+      <div class="ficha-item h-ficha-item"><span class="ficha-key">Estrutura</span><span class="ficha-val">1975 e 2008 em paralelo</span></div>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Narrador &amp; Estrutura</p>
+    <h2 class="block-title">Como a história é contada</h2>
+    <div class="narr-cards">
+      <div class="narr-card h-narr reveal reveal-d1">
+        <span class="narr-icon">🔍</span>
+        <p class="narr-title">Narrador</p>
+        <p class="narr-text">Marcus narra na primeira pessoa — o leitor vê tudo através dos seus olhos, partilhando dúvidas e descobertas. A sua ignorância inicial é intencional: o suspense é genuíno e partilhado.</p>
+      </div>
+      <div class="narr-card h-narr reveal reveal-d2">
+        <span class="narr-icon">🧩</span>
+        <p class="narr-title">Estrutura em Puzzle</p>
+        <p class="narr-text">A narrativa alterna entre 1975 e 2008 — um efeito de puzzle em que o leitor recolhe peças do passado e do presente ao mesmo tempo. Cada capítulo começa com um conselho de Harry sobre escrita, uma camada extra de reflexão sobre o ato de contar histórias.</p>
+      </div>
+      <div class="narr-card h-narr reveal">
+        <span class="narr-icon">✍️</span>
+        <p class="narr-title">Estilo</p>
+        <p class="narr-text">Dicker escreve de forma clara e fluída, sem abdicar da profundidade. Combina o thriller policial com drama humano. O ritmo dos capítulos torna quase impossível parar de ler.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Tempo &amp; Espaço</p>
+    <h2 class="block-title">Quando e Onde</h2>
+    <div class="timeline">
+      <div class="tl-item h-tl-item">
+        <div class="tl-dot h-tl-dot"></div>
+        <div><p class="tl-date h-tl-date">1975 — O Passado</p><p class="tl-text h-tl-text">Harry, com 33 anos, instala-se em Aurora e apaixona-se por Nola. Capítulos com tom quente e nostálgico, cada vez mais sombrios à medida que o desaparecimento se aproxima.</p></div>
+      </div>
+      <div class="tl-item h-tl-item">
+        <div class="tl-dot h-tl-dot"></div>
+        <div><p class="tl-date h-tl-date">2008 — O Presente</p><p class="tl-text h-tl-text">Marcus investiga após a detenção de Harry. Os dois tempos vão-se cruzando progressivamente até se fundirem na resolução do mistério.</p></div>
+      </div>
+    </div>
+    <div class="lugares" style="margin-top:1.5rem">
+      <div class="lugar h-lugar"><div><p class="lugar-pin h-lugar-pin">Lugar</p></div><div><p class="lugar-name">Aurora, New Hampshire</p><p class="lugar-desc">Pequena cidade costeira, aparentemente tranquila, cheia de segredos. O centro de tudo.</p></div></div>
+      <div class="lugar h-lugar"><div><p class="lugar-pin h-lugar-pin">Lugar</p></div><div><p class="lugar-name">Nova Iorque</p><p class="lugar-desc">A cidade de Marcus — agitada e moderna, em contraste com a quietude perturbadora de Aurora.</p></div></div>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Temas &amp; Simbolismo</p>
+    <h2 class="block-title">O que está debaixo da superfície</h2>
+    <div class="temas-grid">
+      <div class="tema-card h-tema"><p class="tema-name">Verdade &amp; Justiça</p><p class="tema-text">Dicker questiona se verdade e justiça andam sempre juntas. Os julgamentos são distorcidos por aparências, preconceitos e segredos escondidos.</p></div>
+      <div class="tema-card h-tema"><p class="tema-name">Amor &amp; Obsessão</p><p class="tema-text">A relação entre Harry e Nola é o coração emocional do livro, levantando questões morais sobre os limites do amor e as suas consequências.</p></div>
+      <div class="tema-card h-tema"><p class="tema-name">Memória &amp; Passado</p><p class="tema-text">O passado nunca desaparece — regressa de formas inesperadas, moldando o presente. A própria estrutura narrativa reforça esta ideia.</p></div>
+      <div class="tema-card h-tema"><p class="tema-name">Escrita &amp; Identidade</p><p class="tema-text">A investigação de Marcus é também uma busca por si mesmo como escritor — o poder da literatura para compreender a vida.</p></div>
+    </div>
+    <div class="pull-quote h-pull" style="margin-top:1.5rem">O corpo enterrado de Nola simboliza os segredos que inevitavelmente vêm à tona. O jardim de Harry — simultaneamente refúgio e mistério — esconde a verdade que todos temem encontrar.</div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Reflexão</p>
+    <h2 class="block-title">Questões que o livro levanta</h2>
+    <div class="questoes">
+      <div class="questao h-questao"><span class="q-n">1</span><p class="q-txt">Quem é realmente o assassino de Nola Kellergan?</p></div>
+      <div class="questao h-questao"><span class="q-n">2</span><p class="q-txt">O que aconteceu verdadeiramente naquela noite em Alabama?</p></div>
+      <div class="questao h-questao"><span class="q-n">3</span><p class="q-txt">É possível confiar em todas as personagens — ou alguém está a mentir?</p></div>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Experiência pessoal</p>
+    <h2 class="block-title">Como este livro me afetou</h2>
+    <div class="reacoes">
+      <div class="reacao h-reacao"><span class="reacao-emoji">🔎</span><div><span class="reacao-label">Curiosidade</span><p class="reacao-desc">Vontade constante de descobrir o assassino</p></div></div>
+      <div class="reacao h-reacao"><span class="reacao-emoji">🧠</span><div><span class="reacao-label">Teorias</span><p class="reacao-desc">Construção de hipóteses a cada capítulo</p></div></div>
+      <div class="reacao h-reacao"><span class="reacao-emoji">😮</span><div><span class="reacao-label">Surpresa</span><p class="reacao-desc">Reviravoltas que não se adivinhavam</p></div></div>
+    </div>
+  </div>
+
+  <div class="h-block reveal">
+    <p class="block-label h-label">Léxico</p>
+    <h2 class="block-title">Palavras novas</h2>
+    <div class="vocab">
+      <div class="vocab-card h-vocab"><span class="vocab-word">Carnificina</span><span class="vocab-def">Matança em massa</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Aquiesceu</span><span class="vocab-def">Consentiu, cedeu</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Augúrios</span><span class="vocab-def">Presságios, sinais</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Limítrofes</span><span class="vocab-def">Que estabelece fronteira</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Fulgurante</span><span class="vocab-def">Brilhante, resplandecente</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Efígie</span><span class="vocab-def">Imagem, retrato</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Retumbante</span><span class="vocab-def">Bombástico, altissoante</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Benévolo</span><span class="vocab-def">De boa vontade</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Sórdido</span><span class="vocab-def">Asqueroso, desprezível</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Imbróglio</span><span class="vocab-def">Situação confusa</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Peremptórios</span><span class="vocab-def">Decisivos, absolutos</span></div>
+      <div class="vocab-card h-vocab"><span class="vocab-word">Amiúde</span><span class="vocab-def">Com frequência</span></div>
+    </div>
+  </div>
+
+</section>
+
+<div class="book-break"><p class="book-break-txt">Dois livros · Duas histórias · Uma análise</p></div>
+
+<!-- SIRA -->
+<section id="sira" class="s-section">
+
+  <div class="s-hero">
+    <div class="s-hero-bg"></div>
+    <span class="s-hero-num" aria-hidden="true">II</span>
+    <div class="s-hero-inner">
+      <p class="s-eyebrow">Romance Histórico · Espionagem</p>
+      <h1>O Tempo Entre<br>Costuras</h1>
+      <p class="s-hero-author">María Dueñas — 2009</p>
+      <div class="s-tags">
+        <span class="s-tag">Fenómeno internacional</span>
+        <span class="s-tag">Série televisiva</span>
+        <span class="s-tag">+35 línguas</span>
+      </div>
+      <p class="s-hero-intro">Uma costureira. Um amor traído. Uma guerra. E uma agulha que se torna a arma mais poderosa de todas.</p>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Sinopse</p>
+    <h2 class="block-title">A História</h2>
+    <p class="prose s-prose">Sira Quiroga, jovem costureira madrilena, abandona tudo por um amor que a trai. Sozinha e sem recursos, reconstrói-se com as únicas ferramentas que possui: a agulha, o fio e um talento excecional. Em Tetuão, Marrocos, cria uma nova identidade como modista de luxo.</p>
+    <p class="prose s-prose" style="margin-top:.9rem">O que começa por ser sobrevivência transforma-se numa missão de espionagem ao serviço dos Aliados — Sira usa o atelier e a proximidade com mulheres da alta sociedade para recolher informações vitais durante a Segunda Guerra Mundial.</p>
+    <div class="ficha">
+      <div class="ficha-item s-ficha-item"><span class="ficha-key">Autora</span><span class="ficha-val">María Dueñas</span></div>
+      <div class="ficha-item s-ficha-item"><span class="ficha-key">Ano</span><span class="ficha-val">2009</span></div>
+      <div class="ficha-item s-ficha-item"><span class="ficha-key">Género</span><span class="ficha-val">Romance histórico</span></div>
+      <div class="ficha-item s-ficha-item"><span class="ficha-key">Narradora</span><span class="ficha-val">Sira Quiroga · 1.ª pessoa</span></div>
+      <div class="ficha-item s-ficha-item"><span class="ficha-key">Estrutura</span><span class="ficha-val">Linear · Romance de formação</span></div>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Narradora &amp; Estrutura</p>
+    <h2 class="block-title">Como a história é contada</h2>
+    <div class="narr-cards">
+      <div class="narr-card s-narr reveal reveal-d1">
+        <span class="narr-icon">🧵</span>
+        <p class="narr-title">Narradora</p>
+        <p class="narr-text" style="color:rgba(15,30,45,.7)">A própria Sira narra na primeira pessoa. O leitor partilha os seus medos, dúvidas e aprendizagens à medida que avança — a sua incerteza inicial torna a narrativa íntima e envolvente.</p>
+      </div>
+      <div class="narr-card s-narr reveal reveal-d2">
+        <span class="narr-icon">📖</span>
+        <p class="narr-title">Estrutura Linear</p>
+        <p class="narr-text" style="color:rgba(15,30,45,.7)">Ao contrário do puzzle de Harry Quebert, a estrutura é cronológica e progressiva — um romance de formação em que cada etapa representa uma transformação profunda da identidade de Sira.</p>
+      </div>
+      <div class="narr-card s-narr reveal">
+        <span class="narr-icon">✂️</span>
+        <p class="narr-title">Estilo</p>
+        <p class="narr-text" style="color:rgba(15,30,45,.7)">Dueñas escreve de forma rica e sensorial: tecidos, cores e pormenores do atelier surgem com tal precisão que a costura se torna uma metáfora de Sira — que se reconstrói ponto a ponto, como quem remenda um tecido rasgado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Tempo &amp; Espaço</p>
+    <h2 class="block-title">Quando e Onde</h2>
+    <div class="timeline">
+      <div class="tl-item s-tl-item"><div class="tl-dot s-tl-dot"></div><div><p class="tl-date s-tl-date">1936–1939 · Guerra Civil Espanhola</p><p class="tl-text s-tl-text">O ponto de partida que força Sira a fugir e a reinventar-se pela primeira vez.</p></div></div>
+      <div class="tl-item s-tl-item"><div class="tl-dot s-tl-dot"></div><div><p class="tl-date s-tl-date">1939–1945 · Segunda Guerra Mundial</p><p class="tl-text s-tl-text">Plano de fundo principal da missão de espionagem — tensões políticas que moldam todas as decisões.</p></div></div>
+      <div class="tl-item s-tl-item"><div class="tl-dot s-tl-dot"></div><div><p class="tl-date s-tl-date">Pós-guerra · Reconstrução</p><p class="tl-text s-tl-text">A Europa tenta recompor-se — assim como a própria Sira.</p></div></div>
+    </div>
+    <p class="prose s-prose" style="margin:1.5rem 0 .8rem;font-style:italic;font-size:.88rem">Dueñas privilegia zonas de fronteira e de neutralidade política — espelhando a dupla vida da protagonista.</p>
+    <div class="lugares">
+      <div class="lugar s-lugar"><div><p class="lugar-pin s-lugar-pin">01</p></div><div><p class="lugar-name">Madrid</p><p class="lugar-desc">Cidade natal. As origens modestas e a vida que Sira deixa para trás.</p></div></div>
+      <div class="lugar s-lugar"><div><p class="lugar-pin s-lugar-pin">02</p></div><div><p class="lugar-name">Tânger</p><p class="lugar-desc">Cosmopolita e fronteiriça. O início da recriação de identidade.</p></div></div>
+      <div class="lugar s-lugar"><div><p class="lugar-pin s-lugar-pin">03</p></div><div><p class="lugar-name">Tetuão</p><p class="lugar-desc">Marrocos. A nova Sira nasce aqui, como modista de luxo.</p></div></div>
+      <div class="lugar s-lugar"><div><p class="lugar-pin s-lugar-pin">04</p></div><div><p class="lugar-name">Madrid (regresso)</p><p class="lugar-desc">Numa Espanha franquista, Sira opera como espia.</p></div></div>
+      <div class="lugar s-lugar"><div><p class="lugar-pin s-lugar-pin">05</p></div><div><p class="lugar-name">Lisboa</p><p class="lugar-desc">Neutra na guerra. Ponto de encontro de espiões e diplomatas de todos os lados.</p></div></div>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Temas &amp; Simbolismo</p>
+    <h2 class="block-title">O que está debaixo da superfície</h2>
+    <div class="temas-grid">
+      <div class="tema-card s-tema"><p class="tema-name">Recriação da Identidade</p><p class="tema-text">Sira reconstrói-se completamente — mudando nome, sotaque, vida. Até que ponto pode uma pessoa recriar-se sem perder a sua essência?</p></div>
+      <div class="tema-card s-tema"><p class="tema-name">Condição Feminina</p><p class="tema-text">Num mundo dominado por homens, Sira usa precisamente o que a sociedade considerava menor — a costura — como instrumento de poder.</p></div>
+      <div class="tema-card s-tema"><p class="tema-name">Guerra &amp; Consequências</p><p class="tema-text">Os conflitos destroem, mas também revelam capacidades que nunca suspeitávamos ter.</p></div>
+      <div class="tema-card s-tema"><p class="tema-name">Amor &amp; Lealdade</p><p class="tema-text">O amor que trai, o amor que salva — Sira aprende a distinguir o que a diminui daquilo que a fortalece.</p></div>
+    </div>
+    <div class="pull-quote s-pull" style="margin-top:1.5rem">A costura é o símbolo maior desta obra: a agulha e o fio representam a capacidade de Sira de se recompor — ponto a ponto, entre os espaços que ninguém vê.</div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Reflexão</p>
+    <h2 class="block-title">Questões que o livro levanta</h2>
+    <div class="questoes">
+      <div class="questao s-questao"><span class="q-n">1</span><p class="q-txt">Como vai Sira conseguir ultrapassar todas as dificuldades que enfrenta?</p></div>
+      <div class="questao s-questao"><span class="q-n">2</span><p class="q-txt">Será que é possível reconstruir uma vida completamente do zero?</p></div>
+      <div class="questao s-questao"><span class="q-n">3</span><p class="q-txt">Que consequências terão as decisões que Sira toma ao longo da história?</p></div>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Experiência pessoal</p>
+    <h2 class="block-title">Como este livro me afetou</h2>
+    <div class="reacoes">
+      <div class="reacao s-reacao"><span class="reacao-emoji">📚</span><div><span class="reacao-label">Interesse</span><p class="reacao-desc">Pelo contexto histórico rico e detalhado</p></div></div>
+      <div class="reacao s-reacao"><span class="reacao-emoji">🔮</span><div><span class="reacao-label">Curiosidade</span><p class="reacao-desc">Ver como Sira se transforma capítulo a capítulo</p></div></div>
+      <div class="reacao s-reacao"><span class="reacao-emoji">✨</span><div><span class="reacao-label">Admiração</span><p class="reacao-desc">Pela coragem e resiliência da protagonista</p></div></div>
+    </div>
+  </div>
+
+  <div class="s-block reveal">
+    <p class="block-label s-label">Léxico</p>
+    <h2 class="block-title">Palavras novas</h2>
+    <div class="vocab">
+      <div class="vocab-card s-vocab"><span class="vocab-word">Energúmeno</span><span class="vocab-def">Pessoa furiosa, descontrolada</span></div>
+      <div class="vocab-card s-vocab"><span class="vocab-word">Exoneração</span><span class="vocab-def">Demissão de um cargo</span></div>
+      <div class="vocab-card s-vocab"><span class="vocab-word">Ócio</span><span class="vocab-def">Tempo livre, ausência de trabalho</span></div>
+      <div class="vocab-card s-vocab"><span class="vocab-word">Exequíveis</span><span class="vocab-def">Que pode ser executado</span></div>
+      <div class="vocab-card s-vocab"><span class="vocab-word">Frenética</span><span class="vocab-def">De intensa agitação</span></div>
+      <div class="vocab-card s-vocab"><span class="vocab-word">Ferrolho</span><span class="vocab-def">Peça metálica de fecho</span></div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <p class="footer-label">Portfolio Literário</p>
+  <div class="footer-titles">
+    <span class="ft-h">A Verdade Sobre o Caso Harry Quebert · Joël Dicker</span>
+    <span class="ft-s">O Tempo Entre Costuras · María Dueñas</span>
+  </div>
+  <p class="footer-copy">Análise Literária · Trabalho Académico</p>
+</footer>
+
+</main>
+
+<script>
+  function closeCapa() { document.getElementById('capa').classList.add('gone'); }
+  function enterSite(id) {
+    closeCapa();
+    setTimeout(() => document.getElementById(id).scrollIntoView({ behavior: 'smooth' }), 250);
+  }
+  function showCapa() { document.getElementById('capa').classList.remove('gone'); }
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  const tabs = { harry: document.querySelector('.topbar-tab.harry'), sira: document.querySelector('.topbar-tab.sira') };
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio > 0.25) {
+        Object.values(tabs).forEach(t => t.classList.remove('active'));
+        if (tabs[e.target.id]) tabs[e.target.id].classList.add('active');
+      }
+    });
+  }, { threshold: 0.25 }).observe(document.getElementById('harry'));
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio > 0.25) {
+        Object.values(tabs).forEach(t => t.classList.remove('active'));
+        if (tabs[e.target.id]) tabs[e.target.id].classList.add('active');
+      }
+    });
+  }, { threshold: 0.25 }).observe(document.getElementById('sira'));
+</script>
+</body>
+</html>
